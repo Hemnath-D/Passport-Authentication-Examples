@@ -16,20 +16,29 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/signup', (req, res, next) => {
-  User.create(req.body)
-  .then((user) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.json(user);
-  })
-  .catch((err) => next(err));
-})
+  User.register(new User({username: req.body.username}), 
+    req.body.password, (err, user) => {
+    console.log(user);
+    if(err) {
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.json({err: err});
+    }
+    else {
+      passport.authenticate('local')(req, res, () => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({success: true, status: 'Registration Successful!'});
+      });
+    }
+  });
+});
 
-router.post('/login', passport.authenticate('local'),
-  (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.json({'message': 'You are Successfully Logged in'});
-  }
-);
+
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  res.json({success: true, status: 'You are successfully logged in!'});
+});
 
 module.exports = router;
