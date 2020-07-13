@@ -1,2 +1,2 @@
 # Passport-Authentication-Examples
-A repository to play with different Passport Strategies in Nodejs
+A repository to experiment with different Passport Strategies in Nodejs
